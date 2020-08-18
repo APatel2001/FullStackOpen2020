@@ -4,8 +4,8 @@ const Persons = ({original, searched, search}) => {
     return (
         <div>
             {search === '' 
-                ? original.map(item => <p key={item.key}>{item.name} {item.number}</p>) 
-                : searched.map(item => <p key={item.key}>{item.name} {item.number}</p>)}
+                ? original.map(item => <p key={item.id}>{item.name} {item.number}</p>) 
+                : searched.map(item => <p key={item.id}>{item.name} {item.number}</p>)}
         </div>
     )
 }

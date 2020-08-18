@@ -1,19 +1,23 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Filter from './components/Filter'
 import Persons from './components/Persons'
 import PersonForm from './components/PersonForm'
-
+import axios from 'axios'
 
 const App = () => {
-    const [persons, setPersons] = useState([
-        { name: 'Arto Hellas', number: '040-123456', key: 1 },
-        { name: 'Ada Lovelace', number: '39-44-5323523', key: 2 },
-        { name: 'Dan Abramov', number: '12-43-234345', key: 3 },
-        { name: 'Mary Poppendieck', number: '39-23-6423122', key: 4 }
-    ])
+    const [persons, setPersons] = useState([])
     const [ newName, setNewName ] = useState('')
     const [ newNumber, setNewNumber] = useState('')
     const [search, changeSearch] = useState('')
+    useEffect(() => {
+        console.log('effect')
+        axios
+          .get('http://localhost:3001/persons')
+          .then(response => {
+            console.log('promise fulfilled')
+            setPersons(response.data)
+          })
+      }, [])
 
     const nameSame = persons.filter(item => item.name === newName)
     const nameSearch = persons.filter(item => item.name.toLowerCase().includes(search.toLowerCase()))
@@ -21,7 +25,7 @@ const App = () => {
         event.preventDefault()
         const newObject = {
             name: newName,
-            key: persons.length +1,
+            id: persons.length +1,
             number: newNumber
         }
         if (nameSame.length === 0) {
