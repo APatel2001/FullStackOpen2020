@@ -5,6 +5,8 @@ import Display from './components/Display.js'
 const App = () => {
     const [countries, setCountries] = useState([])
     const [search, setSearch] = useState('')
+    const [buttonBool, setButtonBool] = useState(false)
+    const [buttonVal, setButtonVal] = useState('')
     useEffect(() => {
       axios
         .get('https://restcountries.eu/rest/v2/all')
@@ -19,9 +21,9 @@ const App = () => {
     return (
       <div>
         <div>
-          find countries <input value={search} onChange={searchHandler}/>
+            find countries <input value={search} onChange={searchHandler}/>
         </div>
-        <Display searchedList={searcher} />
+            <Display searchedList={searcher} setButtonBool={setButtonBool} setButtonVal={setButtonVal} buttonBool={buttonBool} buttonVal={buttonVal}/>
       </div>
     )
   }
