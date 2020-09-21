@@ -1,4 +1,42 @@
-import React from 'react'
+import React, {useState, useEffect} from 'react'
+import axios from 'axios'
+
+
+const Weather = ({ city }) => {
+  const [weatherDetails, setWeatherDetails] = useState(null)
+  
+  useEffect(() => {
+      axios.get('http://api.weatherstack.com/current', {
+          params: {
+              access_key: process.env.REACT_APP_API_KEY,
+              query: city
+          }
+      }).then(
+          (response) => {
+              setWeatherDetails(response.data)
+          }
+      )
+  }, [city])
+  console.log('weather', weatherDetails);
+  
+  if (weatherDetails) {
+    return (
+        <div>
+          <p><b>Temperature: </b>{weatherDetails.current.temperature} Celsius</p>
+          <img src={weatherDetails.current.weather_icons[0]} alt='Weather'/>
+          <p><b>wind: </b>{weatherDetails.current.wind_speed} mph direction {weatherDetails.current.wind_dir}</p>
+        </div>
+    )
+  } 
+  else {
+    return (
+      <div>
+        Loading Weather...
+      </div>
+    )
+  }
+}
+
 
 
 
