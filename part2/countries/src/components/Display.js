@@ -1,5 +1,7 @@
 import React from 'react'
 
+
+
 const Form = ({item, setButtonBool, setButtonVal}) => {
     const submitFunction = (event) => {
         event.preventDefault()
@@ -37,9 +39,10 @@ const TooMany = () => {
 
 
   const One = ({searchedList}) => {
+    const city = searchedList[0]?.capital
     return (
       <div>
-        {searchedList.map(item => <h1 key={item.alpha3Code}>{item.name}</h1>)}
+        <h1>{searchedList[0]?.name}</h1>
         {searchedList.map(item => <p key={item.alpha3Code}>capital {item.capital}</p>)}
         {searchedList.map(item => <p key={item.alpha3Code}>capital {item.population}</p>)}
         <h3>languages</h3>
@@ -51,6 +54,8 @@ const TooMany = () => {
           </ul>
         )}
         {searchedList.map(item => <img src={item.flag} alt="flag" key={item.alpha3Code}/>)}
+        <h1>Weather in {city}</h1>
+        <Weather city={city} />
       </div>
     )
   }
