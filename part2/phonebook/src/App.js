@@ -3,19 +3,24 @@ import Filter from './components/Filter'
 import Persons from './components/Persons'
 import PersonForm from './components/PersonForm'
 import backend from './services/backend'
+import Notification from './components/notification'
+
 
 
 const App = () => {
     const [persons, setPersons] = useState([])
     const [ newName, setNewName ] = useState('')
     const [ newNumber, setNewNumber] = useState('')
-    const [requestData, setRequestData] = useState(new Date()); 
     const [search, changeSearch] = useState('')
+    const [errorMessage, setErrorMesage] = useState(null)
+    const [addedMessage, setAddedMessage] = useState(null)
+
+
     useEffect(() => {
         backend
             .gettAll()
             .then(response => setPersons(response))
-      }, [requestData])
+      }, [])
 
     const nameSame = persons.filter(item => item.name === newName)
     const nameSearch = persons.filter(item => item.name.toLowerCase().includes(search.toLowerCase()))
@@ -31,6 +36,8 @@ const App = () => {
                 .addItem(newObject)
                 .then(response => {
                     setPersons(persons.concat(response))
+                    setAddedMessage(`Added ${newName}`)
+                    setTimeout(() => {setAddedMessage(null)}, 5000)
                     setNewName('')
                     setNewNumber('')
                 })
@@ -40,12 +47,19 @@ const App = () => {
             backend
                 .updateItem(item.id, changedItem)
                 .then(response => {
-                    
                     setPersons(persons.map(i => i.id !== item.id ? i : response))
+                    setAddedMessage(`Changed ${newName}'s Phone Number`)
+                    setTimeout(() => {setAddedMessage(null)}, 5000)
+                })
+                .catch(error => {
+                    setErrorMesage(`${item.name} was already removed from the server`)
+                    setPersons(persons.filter(i => i.id !== item.id))
+                    setTimeout(() => {setErrorMesage(null)}, 5000)
                 })
         } else if (nameSame.length !== 0 && numberSame.length !== 0) {
             console.log(persons)
-            window.alert(`${newName} is already added to phonebook, replace the old number with a new one?`);
+            setErrorMesage(`${newName} is already added to phonebook, replace the old number with a new one?`)
+            setTimeout(() => {setErrorMesage(null)}, 5000)
         }
     }
 
@@ -61,9 +75,14 @@ const App = () => {
     }
 
     const Delete = (id) => {
+        const deleted = persons.find(item => item.id === id)
         backend.deleteItem(id).then(() => {
-            setRequestData(new Date())
-            setPersons(persons.map(item => item))
+            setPersons(persons.filter(item => item.id !== id))
+        })
+        .catch(error => {
+            setErrorMesage(`${deleted.name} was already removed from the server`)
+            setPersons(persons.filter(item => item.id !== id))
+            setTimeout(() => {setErrorMesage(null)}, 5000)
         })
     }
 
@@ -73,6 +92,8 @@ const App = () => {
     return (
         <div>
             <h2>Phonebook</h2>
+            <Notification message={addedMessage} color={"green"}/>
+            <Notification message={errorMessage} color={"red"}/>
             <Filter search={search} searchFunction={searchHandler} />
             <h2>Add New</h2>
             <PersonForm entryFunction={addName} name={newName} nameFunction={nameHandler} number={newNumber} numberFunction={numberHandler}/>

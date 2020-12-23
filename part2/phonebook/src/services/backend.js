@@ -15,7 +15,6 @@ const deleteItem = (id) => {
 }
 
 const updateItem = (id, object) => {
-    console.log(id)
     return axios.put(baseUrl + `/${id}`, object).then(response => response.data)
 }
 
