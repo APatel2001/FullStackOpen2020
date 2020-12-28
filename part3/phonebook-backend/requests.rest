@@ -1,0 +1,14 @@
+POST http://localhost:3001/api/persons/
+content-type: application/json
+
+{
+    "name": "Avi Patel",
+    "number": "925-922-2874"
+
+}
+
+###
+DELETE http://localhost:3001/api/persons/84
+###
+
+GET http://localhost:3001/api/persons
