@@ -26,8 +26,13 @@ const App = () => {
     const nameSearch = persons.filter(item => item.name.toLowerCase().includes(search.toLowerCase()))
     const addName = (event) => {
         event.preventDefault()
-        const numberSame = persons.filter(item => item.number === newNumber)
-        if (nameSame.length === 0) {
+        const nameSearch = persons.find(item => item.name === newName)
+        const numSearch = persons.find(item => (item.number === newNumber && item.name === newName))
+        console.log("NAME:", nameSearch)
+        console.log("NAME:", !nameSearch)
+
+        if (!nameSearch && !numSearch) {
+            console.log("GOT HERE")
             const newObject = {
                 name: newName,
                 number: newNumber
@@ -41,7 +46,14 @@ const App = () => {
                     setNewName('')
                     setNewNumber('')
                 })
-        } else if (nameSame.length !== 0 && numberSame.length === 0) {
+                
+                .catch(error => {
+                    setErrorMesage(error.response.data.error)
+                    setTimeout(() => {setErrorMesage(null)}, 5000)
+                    
+                })
+        } else if (nameSearch && !numSearch) {
+            console.log("GOT HERE")
             const item = persons.find(person => person.name === newName)
             const changedItem = {...item, number: newNumber}
             backend
@@ -52,18 +64,19 @@ const App = () => {
                     setTimeout(() => {setAddedMessage(null)}, 5000)
                 })
                 .catch(error => {
-                    setErrorMesage(`${item.name} was already removed from the server`)
-                    setPersons(persons.filter(i => i.id !== item.id))
+                    setErrorMesage(error.response.data.error)
                     setTimeout(() => {setErrorMesage(null)}, 5000)
                 })
-        } else if (nameSame.length !== 0 && numberSame.length !== 0) {
+        } else if (nameSearch && numSearch) {
+            console.log("GOT HERE")
             console.log(persons)
             setErrorMesage(`${newName} is already added to phonebook, replace the old number with a new one?`)
             setTimeout(() => {setErrorMesage(null)}, 5000)
         }
+    
     }
 
-
+    
     const nameHandler = (event) => {
         setNewName(event.target.value)
     }

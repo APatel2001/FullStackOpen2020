@@ -12,7 +12,8 @@
     "deploy:full": "npm run build:ui && git add . && git commit -m uibuild && npm run deploy",
     "logs:prod": "heroku logs --tail",
     "restart": "heroku restart",
-    "open": "heroku open"
+    "open": "heroku open",
+    "lint": "eslint ."
   },
   "author": "Avi Patel",
   "license": "MIT",
@@ -22,9 +23,15 @@
     "express": "^4.17.1",
     "heroku-logger": "^0.3.3",
     "mongoose": "^5.11.9",
+    "mongoose-unique-validator": "^2.0.3",
     "morgan": "^1.10.0"
   },
   "devDependencies": {
+    "eslint": "^7.16.0",
+    "eslint-config-standard": "^16.0.2",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^4.2.1",
     "nodemon": "^2.0.6"
   }
 }
